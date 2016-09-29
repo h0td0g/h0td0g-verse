@@ -15,6 +15,41 @@
     <script src="components/randomPosition.js"></script>
     <script src="components/player.js"></script>
 
+    <script>
+    AFRAME.registerShader('wireframe', {
+      schema: {
+        wireframe: {default: true}
+      },
+      /**
+       * `init` used to initialize material. Called once.
+       */
+      init: function (data) {
+        this.material = new THREE.MeshBasicMaterial(data);
+        this.update(data);  // `update()` currently not called after `init`. (#1834)
+      },
+      /**
+       * `update` used to update the material. Called on initialization and when data updates.
+       */
+      update: function (data) {
+        <!--this.material.dashsize = data.dashsize;-->
+        <!--this.material.linewidth = data.linewidth;-->
+      }
+    });
+
+
+    AFRAME.registerComponent('grid', {
+      init: function (data) {
+        var scene = this.el.object3D;
+
+        var gridHelper = new THREE.GridHelper( 100, 5 );
+        gridHelper.setColors( 0xffffff, 0xffffff );
+        gridHelper.name = "gridHelper";
+
+        scene.add(gridHelper);
+      }
+    });
+    </script>
+
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -22,8 +57,14 @@
                        authDomain: metaverse-96f6f.firebaseapp.com;
                        databaseURL: https://metaverse-96f6f.firebaseio.com;
                        storageBucket: metaverse-96f6f.appspot.com"
-             chat>
+             chat
+             fog="type: exponential; color: #000; density: 0.0128">
       <a-assets>
+        <a-asset-item id="homer-obj" src="models/homer.obj"></a-asset-item>
+        <a-asset-item id="homer-mtl" src="models/homer.mtl"></a-asset-item>
+
+        <img id="space" src="textures/space.jpg">
+
         <a-mixin id="avatar-head"
                 geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.3"
                 material="color: #222"></a-mixin>
@@ -55,12 +96,11 @@
                   random-player-id="color: white;"></a-entity>
       </a-entity>
 
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"
-             href="https://ngokevin.github.io/aframe-magicavoxel-projects/city/"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
+      <a-entity geometry="primitive: sphere; radius: 100" position="0 0 0" material="src: #space; side: back; repeat: 5 3"></a-entity>
+
+      <a-obj-model src="#homer-obj" material="shader: wireframe" position="0 0 0" scale=".025 .025 .025"></a-obj-model>
+
+      <a-entity grid></a-entity>
     </a-scene>
 
     <div id="chatWidget" class="novr">
