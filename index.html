@@ -58,6 +58,7 @@
                        databaseURL: https://metaverse-96f6f.firebaseio.com;
                        storageBucket: metaverse-96f6f.appspot.com"
              chat
+             physics="debug: false"
              fog="type: exponential; color: #000; density: 0.0128">
       <a-assets>
         <a-asset-item id="homer-obj" src="models/homer.obj"></a-asset-item>
@@ -74,12 +75,16 @@
       <!-- Synced avatar head. Rotates separately from body. -->
       <a-entity id="player" mixin="avatar-head"
                 camera universal-controls
-                random-position="min: -10 1.7 -10; max: 10 1.9 10"
-                firebase-broadcast="componentsOnce: mixin;
-                                    components: position, rotation">
+                keyboard-controls
+                mouse-controls
+                kinematic-body
+                random-position="min: -10 10 -10; max: 10 10 10"
+                >
         <a-cursor color="#4CC3D9"></a-cursor>
       </a-entity>
 
+                <!--firebase-broadcast="componentsOnce: mixin;-->
+                                    <!--components: position, rotation">-->
       <!-- Synced avatar body. -->
       <a-entity id="player-body" firebase-broadcast="components: position" follow="[camera]">
         <a-entity mixin="avatar-body"
@@ -89,16 +94,17 @@
                   random-color></a-entity>
       </a-entity>
 
-      <a-entity id="player-text" firebase-broadcast="components: position" follow="[camera]">
-        <a-entity firebase-broadcast="components: position, bmfont-text"
-                  position="-0.5 0.5 0"
-                  random-player-id="color: white;"></a-entity>
-      </a-entity>
+      <!--<a-entity id="player-text" firebase-broadcast="components: position" follow="[camera]">-->
+        <!--<a-entity firebase-broadcast="components: position, bmfont-text"-->
+                  <!--position="-0.5 0.5 0"-->
+                  <!--random-player-id="color: white;"></a-entity>-->
+      <!--</a-entity>-->
 
       <a-entity geometry="primitive: sphere; radius: 100" position="0 0 0" material="src: #space; side: back; repeat: 5 3"></a-entity>
 
-      <a-obj-model src="#homer-obj" material="shader: wireframe" position="0 0 0" scale=".025 .025 .025"></a-obj-model>
+      <a-obj-model src="#homer-obj" material="shader: wireframe" position="0 0 0" scale=".025 .025 .025" dynamic-body="shape: box"></a-obj-model>
 
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="100" height="100" visible="false" static-body></a-plane>
       <a-entity grid></a-entity>
     </a-scene>
 
